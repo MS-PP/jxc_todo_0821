@@ -14,6 +14,16 @@
         <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     </resultMap>
 
+
+    <select id="selectSupplier" resultMap="BaseResultMap">
+            SELECT
+            supplier_name
+            FROM
+            t_supplier
+            WHERE
+	supplier_name LIKE "%"#{name}"%";
+    </select>
+
     <select id="getSupplierList" resultMap="BaseResultMap">
         SELECT
             t_supplier.supplier_id,

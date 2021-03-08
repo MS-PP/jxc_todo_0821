@@ -10,6 +10,8 @@ import java.util.List;
  */
 public interface SupplierDao {
 
+    List<Supplier> selectSupplier(String name);
+
     List<Supplier> getSupplierList(@Param("offSet") Integer offSet, @Param("pageRow") Integer pageRow, @Param("supplierName") String supplierName);
 
     Integer getSupplierCount(@Param("supplierName") String supplierName);
