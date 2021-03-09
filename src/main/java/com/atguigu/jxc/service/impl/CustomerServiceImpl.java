@@ -77,4 +77,10 @@ public class CustomerServiceImpl implements CustomerService {
         return new ServiceVO<>(SuccessCode.SUCCESS_CODE, SuccessCode.SUCCESS_MESS);
     }
 
+    @Override
+    public List<Customer> clientList(String q) {
+        List<Customer> customers = customerDao.clientList(q);
+        return customers;
+    }
+
 }

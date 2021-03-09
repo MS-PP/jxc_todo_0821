@@ -17,4 +17,5 @@ public interface CustomerService {
 
     ServiceVO delete(String ids);
 
+    List<Customer> clientList(String q);
 }

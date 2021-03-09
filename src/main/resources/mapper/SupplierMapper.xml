@@ -17,11 +17,11 @@
 
     <select id="selectSupplier" resultMap="BaseResultMap">
             SELECT
-            supplier_name
+            supplier_id,supplier_name,contacts,phone_number,address,remarks
             FROM
             t_supplier
             WHERE
-	supplier_name LIKE "%"#{name}"%";
+	supplier_name LIKE CONCAT('%', #{q} ,'%')
     </select>
 
     <select id="getSupplierList" resultMap="BaseResultMap">

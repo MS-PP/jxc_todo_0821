@@ -86,7 +86,7 @@
             t_goods
     </select>
 
-    <insert id="saveGoods" useGeneratedKeys="true" keyProperty="goodsId" parameterType="com.atguigu.jxc.entity.Goods">
+    <insert id="saveGoods" useGeneratedKeys="true" keyProperty="purchaseListId" parameterType="com.atguigu.jxc.entity.Goods">
         INSERT INTO t_goods
         (
         goods_code, goods_name, inventory_quantity, min_num, goods_model,

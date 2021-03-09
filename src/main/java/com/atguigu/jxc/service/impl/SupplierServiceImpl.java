@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @description
@@ -80,8 +81,13 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public List<Supplier> allQuery(String supplierName) {
+    public List<Supplier> allQuery(String q) {
+        List<Supplier> suppliers = supplierDao.selectSupplier(q);
 
-        return null;
+        return suppliers  ;
+        }
+
+
+
     }
-}
+

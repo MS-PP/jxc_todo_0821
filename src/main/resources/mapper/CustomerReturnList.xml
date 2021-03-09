@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.jxc.dao.CustomerReturnListDao">
+
+    <insert id="savecustomerReturnList" keyProperty="customerReturnListId" useGeneratedKeys="true" parameterType="com.atguigu.jxc.entity.CustomerReturnList">
+        insert into
+        t_customer_return_list
+        (return_number,return_date,amount_paid,amount_payable,
+        state,remarks,customer_id)
+        values
+        (
+        #{returnNumber},#{returnDate}, #{amountPaid}, #{amountPayable}, #{state}, #{remarks}, #{customerId}
+        )
+    </insert>
+
+    <insert id="savecustomerReturnListGoodsStr" keyProperty="customerReturnListGoodsId" useGeneratedKeys="true" parameterType="com.atguigu.jxc.entity.CustomerReturnListGoods">
+        insert into t_customer_return_list_goods
+        (goods_id,goods_code,goods_name,goods_model,goods_num,goods_unit,price,total,customer_return_list_id,goods_type_id)
+        values
+        (#{goodsId},#{goodsCode},#{goodsName},#{goodsModel},#{goodsNum},#{goodsUnit},#{price},#{total},#{customerReturnListId},#{goodsTypeId})
+    </insert>
+
+    <resultMap id="CustomerReturnListMap"  type="com.atguigu.jxc.entity.CustomerReturnList">
+        <result column="customer_return_list_id" property="customerReturnListId" jdbcType="INTEGER"/>
+        <result column="return_number" property="returnNumber" jdbcType="VARCHAR"/>
+        <result column="return_date" property="returnDate" jdbcType="VARCHAR"/>
+        <result column="amount_paid" property="amountPaid" jdbcType="FLOAT"/>
+        <result column="amount_payable" property="amountPayable" jdbcType="FLOAT"/>
+        <result column="state" property="state" jdbcType="VARCHAR"/>
+        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="remarks" property="remarks" jdbcType="INTEGER"/>
+        <result column="customer_name" property="customerName" jdbcType="INTEGER"/>
+        <result column="true_name" property="trueName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getReturnList" resultMap="CustomerReturnListMap">
+        select
+        t.customer_return_list_id,
+        t.return_number,
+        t.return_date,
+        t.amount_paid,
+        t.amount_payable,
+        t.state,
+        t.customer_id,
+        t_user.user_id,
+        t.remarks,
+        t_customer.customer_name,
+        t_user.true_name
+        from
+        t_customer_return_list t
+        left join t_user on t.user_id = t_user.user_id
+        left join t_customer on t.customer_id=t_customer.customer_id
+        <where>
+            <if test="sTime != null and sTime != ''">
+                and t.return_date &gt;= #{sTime}
+            </if>
+            <if test="eTime != null and eTime != ''">
+                and t.return_date &lt;= #{eTime}
+            </if>
+            <if test="state != null and state!=''">
+                and t.state = #{state}
+            </if>
+            <if test="returnNumber != null and returnNumber!=''">
+                and t.return_number = #{returnNumber}
+            </if>
+            <if test="customerId != null and customerId!=''">
+                and t.customer_id = #{customerId}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="returnPolicyMap"  type="com.atguigu.jxc.entity.CustomerReturnListGoods">
+        <result column="customer_return_list_goods_id" property="customerReturnListGoodsId" jdbcType="INTEGER"/>
+        <result column="goods_id" property="goodsId" jdbcType="VARCHAR"/>
+        <result column="goods_code" property="goodsCode" jdbcType="VARCHAR"/>
+        <result column="goods_name" property="goodsName" jdbcType="FLOAT"/>
+        <result column="goods_model" property="goodsModel" jdbcType="FLOAT"/>
+        <result column="goods_num" property="goodsNum" jdbcType="VARCHAR"/>
+        <result column="goods_unit" property="goodsUnit" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="total" property="total" jdbcType="INTEGER"/>
+        <result column="customer_return_list_id" property="customerReturnListId" jdbcType="INTEGER"/>
+        <result column="goods_type_id" property="goodsTypeId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="returnPolicy" resultMap="returnPolicyMap">
+        select
+        *
+        from
+        t_customer_return_list_goods
+        where
+       customer_return_list_id =#{customerReturnListId}
+    </select>
+
+
+
+    <delete id="deletecustomer" parameterType="java.lang.Integer">
+        delete
+        from
+        t_customer_return_list_goods
+        where
+      customer_return_list_id =#{customerReturnListId}
+    </delete>
+
+    <delete id="deletecustomerReturnList" parameterType="java.lang.Integer">
+        DELETE FROM
+       t_customer_return_list
+        WHERE customer_return_list_id = #{customerReturnListId}
+    </delete>
+</mapper>

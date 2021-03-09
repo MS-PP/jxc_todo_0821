@@ -14,6 +14,15 @@
         <result column="remarks" property="remarks" jdbcType="VARCHAR" />
     </resultMap>
 
+    <select id="clientList" resultMap="BaseResultMap">
+        SELECT
+        customer_id,customer_name,contacts,phone_number,address,remarks
+        FROM
+        t_customer
+        WHERE
+	customer_name LIKE concat('%',#{q},'%')
+    </select>
+
     <select id="getCustomerList" resultMap="BaseResultMap">
         SELECT
             t_customer.customer_id,

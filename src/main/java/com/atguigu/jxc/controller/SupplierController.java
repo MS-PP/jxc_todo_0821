@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,7 +28,7 @@ public class SupplierController {
 
 
 
-        @PostMapping("/getComboboxList")
+        @PostMapping("getComboboxList")
         public List<Supplier> getComboboxList(String q){
          return   supplierService.allQuery(q);
         }

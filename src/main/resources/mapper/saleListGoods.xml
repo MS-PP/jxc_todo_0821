@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.jxc.dao.saleListGoodsDao">
+
+    <insert id="saveSaleList" keyProperty="saleListId" useGeneratedKeys="true" parameterType="com.atguigu.jxc.entity.SaleList">
+      INSERT INTO t_sale_list
+        (
+        sale_number,amount_paid,amount_payable,sale_date,
+        state,remarks,customer_id,user_id
+        )
+        VALUES
+        (
+        #{saleNumber}, #{amountPaid}, #{amountPayable}, #{saleDate}, #{state}, #{remarks}, #{customerId},#{userId}
+        )
+    </insert>
+
+    <insert id="savesaleListGoodsStr" keyProperty="saleListGoodsId" useGeneratedKeys="true" parameterType="com.atguigu.jxc.entity.SaleListGoods">
+        insert into t_sale_list_goods
+        (goods_id,goods_code,goods_name,goods_model,goods_num,goods_unit,price,total,sale_list_id,goods_type_id)
+        values
+        (#{goodsId},#{goodsCode},#{goodsName},#{goodsModel},#{goodsNum},#{goodsUnit},#{price},#{total},#{saleListId},#{goodsTypeId})
+    </insert>
+
+
+    <resultMap id="getReturnListResultMap"  type="com.atguigu.jxc.entity.SaleList">
+        <result column="sale_list_id" property="saleListId" jdbcType="INTEGER"/>
+        <result column="sale_number" property="saleNumber" jdbcType="VARCHAR"/>
+        <result column="amount_paid" property="amountPaid" jdbcType="VARCHAR"/>
+        <result column="amount_payable" property="amountPayable" jdbcType="FLOAT"/>
+        <result column="sale_date" property="saleDate" jdbcType="FLOAT"/>
+        <result column="state" property="state" jdbcType="VARCHAR"/>
+        <result column="remarks" property="remarks" jdbcType="INTEGER"/>
+        <result column="customer_id" property="customerId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="customer_name" property="customerName" jdbcType="INTEGER"/>
+        <result column="true_name" property="trueName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getReturnList" resultMap="getReturnListResultMap">
+        select
+        t_sale_list.sale_list_id,
+        t_sale_list.sale_number,
+        t_sale_list.amount_paid,
+        t_sale_list.amount_payable,
+        t_sale_list.sale_date,
+        t_sale_list.state,
+        t_sale_list.remarks,
+        t_sale_list.customer_id,
+        t_user.user_id,
+        t_user.true_name,
+        t_customer.customer_name
+        from
+        t_sale_list
+        left join t_user on t_sale_list.user_id = t_user.user_id
+        left join t_customer on t_sale_list.customer_id=t_customer.customer_id
+        <where>
+            <if test="sTime != null and sTime != ''">
+                and t_sale_list.sale_date &gt;= #{sTime}
+            </if>
+            <if test="eTime != null and eTime != ''">
+                and t_sale_list.sale_date &lt;= #{eTime}
+            </if>
+            <if test="state != null and state!=''">
+                and t_sale_list.state = #{state}
+            </if>
+            <if test="returnNumber != null and returnNumber!=''">
+                and t_sale_list.sale_number = #{returnNumber}
+            </if>
+            <if test="customerId != null and customerId!=''">
+                and t_sale_list.customer_id = #{customerId}
+            </if>
+        </where>
+    </select>
+    <resultMap id="productInformationMap"  type="com.atguigu.jxc.entity.SaleListGoods">
+        <result column="goods_id" property="goodsId" jdbcType="VARCHAR"/>
+        <result column="goods_code" property="goodsCode" jdbcType="VARCHAR"/>
+        <result column="goods_name" property="goodsName" jdbcType="FLOAT"/>
+        <result column="goods_model" property="goodsModel" jdbcType="FLOAT"/>
+        <result column="goods_num" property="goodsNum" jdbcType="VARCHAR"/>
+        <result column="goods_unit" property="goodsUnit" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="total" property="total" jdbcType="INTEGER"/>
+        <result column="sale_list_id" property="saleListId" jdbcType="INTEGER"/>
+        <result column="goods_type_id" property="goodsTypeId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="productInformation" resultMap="productInformationMap">
+        select
+        *
+        from
+        t_sale_list_goods
+        where
+       sale_list_id =#{saleListId}
+    </select>
+
+    <delete id="deleteSales" parameterType="java.lang.Integer">
+        delete
+        from
+        t_sale_list_goods
+        where
+       t_sale_list_goods.sale_list_id =#{saleListId}
+    </delete>
+
+    <delete id="deleteListSales" parameterType="java.lang.Integer">
+        DELETE FROM
+        t_sale_list
+        WHERE t_sale_list.sale_list_id = #{saleListId}
+    </delete>
+</mapper>

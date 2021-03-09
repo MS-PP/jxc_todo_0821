@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.jxc.dao.purchaseListDao">
+
+    <resultMap id="PurchaseMap" type="com.atguigu.jxc.entity.PurchaseList">
+        <result column="purchase_list_id" property="purchaseListId" jdbcType="INTEGER" />
+        <result column="purchase_number" property="purchaseNumber" jdbcType="VARCHAR" />
+        <result column="amount_paid" property="amountPaid" jdbcType="VARCHAR" />
+        <result column="amount_payable" property="amountPayable" jdbcType="INTEGER" />
+        <result column="purchase_date" property="purchaseDate" jdbcType="DECIMAL" />
+        <result column="remarks" property="remarks" jdbcType="INTEGER" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
+        <result column="supplier_id" property="supplierId" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="DECIMAL" />
+        <result column="supplier_name" property="supplierName" jdbcType="VARCHAR" />
+        <result column="true_name" property="trueName" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <insert id="savepurchase" useGeneratedKeys="true" keyProperty="purchaseListId" parameterType="com.atguigu.jxc.entity.PurchaseList">
+        INSERT INTO t_purchase_list
+        (
+        purchase_number, amount_paid, amount_payable, purchase_date,
+        remarks, state,supplier_id
+        )
+        VALUES
+        (
+        #{purchaseNumber}, #{amountPaid}, #{amountPayable}, #{purchaseDate}, #{remarks},
+        #{state}, #{supplierId}
+        )
+    </insert>
+
+    <insert id="savepurchaseList" useGeneratedKeys="true" keyProperty="purchaseListGoodsId" parameterType="com.atguigu.jxc.entity.PurchaseListGoods">
+        INSERT INTO t_purchase_list_goods
+        (
+        goods_id, goods_code, goods_name, goods_model,
+        goods_unit, goods_num,price,total,purchase_list_id,
+        goods_type_id
+        )
+        VALUES
+        (
+        #{goodsId}, #{goodsCode}, #{goodsName}, #{goodsModel}, #{goodsUnit},
+        #{goodsNum}, #{price},#{total},#{purchaseListId},#{goodsTypeId}
+        )
+    </insert>
+
+<select id="purchaseSingleTable" resultMap="PurchaseMap">
+    SELECT
+    *
+    FROM
+    t_purchase_list t
+    LEFT JOIN t_user
+    ON t.user_id = t_user.user_id
+    LEFT JOIN t_supplier
+    ON t.supplier_id = t_supplier.supplier_id
+    <where>
+        <if test="sTime != null and sTime != ''">
+            and t.purchase_date => #{sTime}
+        </if>
+        <if test="eTime != null and eTime != ''">
+            and t.purchase_date  &lt;= #{eTime}
+        </if>
+        <if test="state != null and state!=''">
+            and t.state = #{state}
+        </if>
+        <if test="returnNumber != null and returnNumber!=''">
+            and t.return_number = #{returnNumber}
+        </if>
+        <if test="supplierId != null and supplierId!=''">
+            and t.supplier_id = #{supplierId}
+        </if>
+    </where>
+</select>
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
